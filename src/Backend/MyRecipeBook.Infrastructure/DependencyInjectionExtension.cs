@@ -6,6 +6,7 @@ using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.User;
 using MyRecipeBook.Infrastructure.DataAccess;
 using MyRecipeBook.Infrastructure.DataAccess.Repositories;
+using MyRecipeBook.Infrastructure.Extensions;
 
 namespace MyRecipeBook.Infrastructure
 {
@@ -13,12 +14,10 @@ namespace MyRecipeBook.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var databaseType = configuration.GetConnectionString("DatabaseType");
-
-            var databaseTypeEnum = (DatabaseType)Enum.Parse(typeof(DatabaseType), databaseType!);
+            var databseType = configuration.DatabaseType();
 
             //Se tiver outro banco de dados, criar o add dele abaixo, ajustar o settings, o enum e configurar para uso.
-            if(databaseTypeEnum == DatabaseType.SqlServer)
+            if (databseType == DatabaseType.SqlServer)
                 AddDbContextSqlServer(services, configuration);
             else
                 AddDbContextOtherDB(services, configuration);
@@ -28,7 +27,7 @@ namespace MyRecipeBook.Infrastructure
 
         private static void AddDbContextSqlServer(IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("connectionSQLServer");
+            var connectionString = configuration.ConnectionString();
 
             services.AddDbContext<MyRecipeBookDbContext>(dbContextOptions =>
             {
@@ -38,7 +37,7 @@ namespace MyRecipeBook.Infrastructure
 
         private static void AddDbContextOtherDB(IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("connectionOtherDB");
+            var connectionString = configuration.ConnectionString();
 
             services.AddDbContext<MyRecipeBookDbContext>(dbContextOptions =>
             {
