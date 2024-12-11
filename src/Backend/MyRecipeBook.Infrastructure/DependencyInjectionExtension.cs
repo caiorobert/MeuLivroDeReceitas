@@ -16,6 +16,11 @@ namespace MyRecipeBook.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            AddRepositories(services);
+
+            if (configuration.IsUnitTestEnviroment())
+                return;
+
             var databseType = configuration.DatabaseType();
 
             //Se tiver outro banco de dados, criar o add dele abaixo, ajustar o settings, o enum e configurar para uso.
@@ -29,8 +34,6 @@ namespace MyRecipeBook.Infrastructure
                 AddDbContextOtherDB(services, configuration);
                 AddFluentMigrator_OtherDB(services, configuration);
             }
-
-            AddRepositories(services);
         }
 
         private static void AddDbContextSqlServer(IServiceCollection services, IConfiguration configuration)
