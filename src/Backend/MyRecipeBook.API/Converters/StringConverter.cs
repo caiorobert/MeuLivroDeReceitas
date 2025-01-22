@@ -16,7 +16,7 @@ namespace MyRecipeBook.API.Converters
             return RemoveExtraWhiteSpaces().Replace(value, " ");
         }
 
-        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) => writer.WriteStartArray(value);
+        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) => writer.WriteStringValue(value);
         
         [GeneratedRegex(@"\s+")]
         private static partial Regex RemoveExtraWhiteSpaces();
