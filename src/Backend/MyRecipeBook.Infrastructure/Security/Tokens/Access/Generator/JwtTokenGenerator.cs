@@ -9,11 +9,11 @@ namespace MyRecipeBook.Infrastructure.Security.Tokens.Access.Generator
     public class JwtTokenGenerator : IAccessTokenGenerator
     {
         private readonly uint _expirationTimeMinutes;
-        private readonly string _singleKey;
-        public JwtTokenGenerator(uint expirationTimeMinutes, string singleKey)
+        private readonly string _signingKey;
+        public JwtTokenGenerator(uint expirationTimeMinutes, string signingKey)
         {
             _expirationTimeMinutes = expirationTimeMinutes;
-            _singleKey = singleKey;
+            _signingKey = signingKey;
         }
 
         public string Generate(Guid userIdentifier)
@@ -39,7 +39,7 @@ namespace MyRecipeBook.Infrastructure.Security.Tokens.Access.Generator
 
         private SymmetricSecurityKey SecurityKey()
         {
-            var bytes = Encoding.UTF8.GetBytes(_singleKey);
+            var bytes = Encoding.UTF8.GetBytes(_signingKey);
 
             return new SymmetricSecurityKey(bytes);
         }
