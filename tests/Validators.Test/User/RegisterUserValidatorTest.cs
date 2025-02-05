@@ -1,7 +1,8 @@
 ﻿using CommonTestUtilities.Requests;
-using FluentAssertions;
+//using FluentAssertions;
 using MyRecipeBook.Application.UseCases.User.Register;
 using MyRecipeBook.Exceptions;
+using Shouldly;
 
 namespace Validators.Test.User
 {
@@ -16,7 +17,11 @@ namespace Validators.Test.User
 
             var result = validator.Validate(request);
 
-            result.IsValid.Should().BeTrue();
+            /* SHOULDLY */
+            result.IsValid.ShouldBeTrue();
+
+            /* FLUENT ASSERTIONS */
+            //result.IsValid.Should().BeTrue();
         }
 
         [Fact]
@@ -29,9 +34,17 @@ namespace Validators.Test.User
 
             var result = validator.Validate(request);
 
-            result.IsValid.Should().BeFalse();
-            result.Errors.Should().ContainSingle()
-                .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.NAME_EMPTY));
+            /* SHOULDLY */
+            result.IsValid.ShouldBeFalse();
+            result.Errors.ShouldSatisfyAllConditions(
+                er => er.ShouldHaveSingleItem(),
+                er => er.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.NAME_EMPTY))
+                );
+
+            /* FLUENT ASSERTIONS */
+            //result.IsValid.Should().BeFalse();
+            //result.Errors.Should().ContainSingle()
+            //    .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.NAME_EMPTY));
         }
 
         [Fact]
@@ -44,9 +57,17 @@ namespace Validators.Test.User
 
             var result = validator.Validate(request);
 
-            result.IsValid.Should().BeFalse();
-            result.Errors.Should().ContainSingle()
-                .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.EMAIL_EMPTY));
+            /* SHOULDLY */
+            result.IsValid.ShouldBeFalse();
+            result.Errors.ShouldSatisfyAllConditions(
+                er => er.ShouldHaveSingleItem(),
+                er => er.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.EMAIL_EMPTY))
+                );
+
+            /* FLUENT ASSERTIONS */
+            //result.IsValid.Should().BeFalse();
+            //result.Errors.Should().ContainSingle()
+            //    .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.EMAIL_EMPTY));
         }
 
         [Fact]
@@ -59,9 +80,17 @@ namespace Validators.Test.User
 
             var result = validator.Validate(request);
 
-            result.IsValid.Should().BeFalse();
-            result.Errors.Should().ContainSingle()
-                .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.EMAIL_INVALID));
+            /* SHOULDLY */
+            result.IsValid.ShouldBeFalse();
+            result.Errors.ShouldSatisfyAllConditions(
+                er => er.ShouldHaveSingleItem(),
+                er => er.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.EMAIL_INVALID))
+                );
+
+            /* FLUENT ASSERTIONS */
+            //result.IsValid.Should().BeFalse();
+            //result.Errors.Should().ContainSingle()
+            //    .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.EMAIL_INVALID));
         }
 
         [Theory]
@@ -79,9 +108,17 @@ namespace Validators.Test.User
 
             var result = validator.Validate(request);
 
-            result.IsValid.Should().BeFalse();
-            result.Errors.Should().ContainSingle()
-                .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.PASSWORD_EMPTY));
+            /* SHOULDLY */
+            result.IsValid.ShouldBeFalse();
+            result.Errors.ShouldSatisfyAllConditions(
+                er => er.ShouldHaveSingleItem(),
+                er => er.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.PASSWORD_EMPTY))
+                );
+
+            /* FLUENT ASSERTIONS */
+            //result.IsValid.Should().BeFalse();
+            //result.Errors.Should().ContainSingle()
+            //    .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.PASSWORD_EMPTY));
         }
     }
 }

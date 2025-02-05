@@ -3,11 +3,12 @@ using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using CommonTestUtilities.Tokens;
-using FluentAssertions;
 using MyRecipeBook.Application.UseCases.Login.DoLogin;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
+//using FluentAssertions;
+using Shouldly;
 
 namespace UseCases.Test.Login.DoLogin
 {
@@ -26,10 +27,20 @@ namespace UseCases.Test.Login.DoLogin
                 Password = password
             });
 
-            result.Should().NotBeNull();
-            result.Tokens.Should().NotBeNull();
-            result.Name.Should().NotBeNullOrWhiteSpace().And.Be(user.Name);
-            result.Tokens.AccessToken.Should().NotBeNullOrEmpty();
+            /* SHOULDLY */
+            result.ShouldNotBeNull();
+            result.Tokens.ShouldNotBeNull();
+            result.Name.ShouldSatisfyAllConditions(
+                name => name.ShouldNotBeNullOrWhiteSpace(),
+                name => name.ShouldBe(user.Name)
+                );
+            result.Tokens.AccessToken.ShouldNotBeNullOrEmpty();
+
+            /* FLUENT ASSERTIONS */
+            //result.Should().NotBeNull();
+            //result.Tokens.Should().NotBeNull();
+            //result.Name.Should().NotBeNullOrWhiteSpace().And.Be(user.Name);
+            //result.Tokens.AccessToken.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -41,8 +52,13 @@ namespace UseCases.Test.Login.DoLogin
 
             Func<Task> act = async () => { await useCase.Execute(request); };
 
-            await act.Should().ThrowAsync<InvalidLoginException>()
-                .WithMessage(ResourceMessagesExceptions.EMAIL_OR_PASSWORD_INVALID);
+            /* SHOULDLY */
+            var exception = await act.ShouldThrowAsync<InvalidLoginException>();
+            exception.Message.ShouldBe(ResourceMessagesExceptions.EMAIL_OR_PASSWORD_INVALID);
+
+            /* FLUENT ASSERTIONS */
+            //await act.Should().ThrowAsync<InvalidLoginException>()
+            //    .WithMessage(ResourceMessagesExceptions.EMAIL_OR_PASSWORD_INVALID);
         }
 
         private static DoLoginUseCase CreateUseCase(MyRecipeBook.Domain.Entities.User? user = null)

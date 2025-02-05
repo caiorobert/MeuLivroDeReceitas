@@ -1,7 +1,8 @@
 ﻿using CommonTestUtilities.Requests;
-using FluentAssertions;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Exceptions;
+//using FluentAssertions;
+using Shouldly;
 using System.Globalization;
 using System.Net;
 using System.Text.Json;
@@ -34,14 +35,26 @@ namespace WebApi.Test.Login.DoLogin
 
             var response = await DoPost(method, request);
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            /* SHOULDLY */
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            /* FLUENT ASSERTIONS */
+            //response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             await using var responseBody = await response.Content.ReadAsStreamAsync();
 
             var responseData = await JsonDocument.ParseAsync(responseBody);
 
-            responseData.RootElement.GetProperty("name").GetString().Should().NotBeNullOrWhiteSpace().And.Be(_name);
-            responseData.RootElement.GetProperty("tokens").GetProperty("accessToken").GetString().Should().NotBeNullOrEmpty();
+            /* SHOULDLY */
+            responseData.RootElement.GetProperty("name").GetString().ShouldSatisfyAllConditions(
+                name => name.ShouldNotBeNullOrWhiteSpace(),
+                name => name.ShouldBe(_name)
+                );
+            responseData.RootElement.GetProperty("tokens").GetProperty("accessToken").GetString().ShouldNotBeNullOrEmpty();
+
+            /* FLUENT ASSERTIONS */
+            //responseData.RootElement.GetProperty("name").GetString().Should().NotBeNullOrWhiteSpace().And.Be(_name);
+            //responseData.RootElement.GetProperty("tokens").GetProperty("accessToken").GetString().Should().NotBeNullOrEmpty();
         }
 
         [Theory]
@@ -52,7 +65,11 @@ namespace WebApi.Test.Login.DoLogin
 
             var response = await DoPost(method, request, culture);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            /* SHOULDLY */
+            response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+
+            /* FLUENT ASSERTIONS */
+            //response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 
             await using var responseBody = await response.Content.ReadAsStreamAsync();
 
@@ -62,7 +79,14 @@ namespace WebApi.Test.Login.DoLogin
 
             var expectedMessage = ResourceMessagesExceptions.ResourceManager.GetString("EMAIL_OR_PASSWORD_INVALID", new CultureInfo(culture));
 
-            erros.Should().ContainSingle().And.Contain(error => error.GetString()!.Equals(expectedMessage));
+            /* SHOULDLY */
+            erros.ShouldSatisfyAllConditions(
+                er => er.ShouldHaveSingleItem(),
+                er => er.ShouldContain(error => error.GetString()!.Equals(expectedMessage))
+                );
+
+            /* FLUENT ASSERTIONS */
+            //erros.Should().ContainSingle().And.Contain(error => error.GetString()!.Equals(expectedMessage));
         }
     }
 }

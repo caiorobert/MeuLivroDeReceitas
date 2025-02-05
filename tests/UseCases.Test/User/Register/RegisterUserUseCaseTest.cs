@@ -3,10 +3,11 @@ using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using CommonTestUtilities.Tokens;
-using FluentAssertions;
+//using FluentAssertions;
 using MyRecipeBook.Application.UseCases.User.Register;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
+using Shouldly;
 
 namespace UseCases.Test.User.Register
 {
@@ -21,10 +22,20 @@ namespace UseCases.Test.User.Register
 
             var result = await useCase.Execute(request);
 
-            result.Should().NotBeNull();
-            result.Tokens.Should().NotBeNull();
-            result.Name.Should().Be(request.Name);
-            result.Tokens.AccessToken.Should().NotBeNullOrEmpty();
+            /* SHOULDLY */
+            result.ShouldNotBeNull();
+            result.Tokens.ShouldNotBeNull();
+            result.Name.ShouldSatisfyAllConditions(
+                name => name.ShouldNotBeNullOrWhiteSpace(),
+                name => name.ShouldBe(request.Name)
+                );
+            result.Tokens.AccessToken.ShouldNotBeNullOrEmpty();
+
+            /* FLUENT ASSERTIONS */
+            //result.Should().NotBeNull();
+            //result.Tokens.Should().NotBeNull();
+            //result.Name.Should().Be(request.Name);
+            //result.Tokens.AccessToken.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -36,8 +47,16 @@ namespace UseCases.Test.User.Register
 
             Func<Task> act = async () => await useCase.Execute(request);
 
-            (await act.Should().ThrowAsync<ErrorOnValidationException>())
-                .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED));
+            /* SHOULDLY */
+            var exception = await act.ShouldThrowAsync<ErrorOnValidationException>();
+            exception.ShouldSatisfyAllConditions(
+                ex => ex.ErrorMessages.ShouldHaveSingleItem(),
+                ex => ex.ErrorMessages.ShouldContain(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED)
+            );
+
+            /* FLUENT ASSERTIONS */
+            //(await act.Should().ThrowAsync<ErrorOnValidationException>())
+            //    .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED));
         }
 
         [Fact]
@@ -50,8 +69,16 @@ namespace UseCases.Test.User.Register
 
             Func<Task> act = async () => await useCase.Execute(request);
 
-            (await act.Should().ThrowAsync<ErrorOnValidationException>())
-                .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesExceptions.NAME_EMPTY));
+            /* SHOULDLY */
+            var exception = await act.ShouldThrowAsync<ErrorOnValidationException>();
+            exception.ShouldSatisfyAllConditions(
+                ex => ex.ErrorMessages.ShouldHaveSingleItem(),
+                ex => ex.ErrorMessages.ShouldContain(ResourceMessagesExceptions.NAME_EMPTY)
+            );
+
+            /* FLUENT ASSERTIONS */
+            //(await act.Should().ThrowAsync<ErrorOnValidationException>())
+            //    .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesExceptions.NAME_EMPTY));
         }
 
         private static RegisterUserUseCase CreateUseCase(string? email = null)

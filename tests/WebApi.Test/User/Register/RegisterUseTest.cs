@@ -1,5 +1,6 @@
 ﻿using CommonTestUtilities.Requests;
-using FluentAssertions;
+//using FluentAssertions;
+using Shouldly;
 using MyRecipeBook.Exceptions;
 using System.Globalization;
 using System.Net;
@@ -21,14 +22,26 @@ namespace WebApi.Test.User.Register
 
             var response = await DoPost(method, request);
 
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
+            /* SHOULDLY */
+            response.StatusCode.ShouldBe(HttpStatusCode.Created);
+
+            /* FLUENT ASSERTIONS */
+            //response.StatusCode.Should().Be(HttpStatusCode.Created);
 
             await using var responseBody = await response.Content.ReadAsStreamAsync();
 
             var responseData = await JsonDocument.ParseAsync(responseBody);
 
-            responseData.RootElement.GetProperty("name").GetString().Should().NotBeNullOrWhiteSpace().And.Be(request.Name);
-            responseData.RootElement.GetProperty("tokens").GetProperty("accessToken").GetString().Should().NotBeNullOrEmpty();
+            /* SHOULDLY */
+            responseData.RootElement.GetProperty("name").GetString().ShouldSatisfyAllConditions(
+                name => name.ShouldNotBeNullOrWhiteSpace(),
+                name => name.ShouldBe(request.Name)
+                );
+            responseData.RootElement.GetProperty("tokens").GetProperty("accessToken").GetString().ShouldNotBeNullOrEmpty();
+
+            /* FLUENT ASSERTIONS */
+            //responseData.RootElement.GetProperty("name").GetString().Should().NotBeNullOrWhiteSpace().And.Be(request.Name);
+            //responseData.RootElement.GetProperty("tokens").GetProperty("accessToken").GetString().Should().NotBeNullOrEmpty();
         }
 
         [Theory]
@@ -40,7 +53,11 @@ namespace WebApi.Test.User.Register
 
             var response = await DoPost(method, request, culture);
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            /* SHOULDLY */
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+
+            /* FLUENT ASSERTIONS */
+            //response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
             await using var responseBody = await response.Content.ReadAsStreamAsync();
 
@@ -50,7 +67,14 @@ namespace WebApi.Test.User.Register
 
             var expectedMessage = ResourceMessagesExceptions.ResourceManager.GetString("NAME_EMPTY", new CultureInfo(culture));
 
-            erros.Should().ContainSingle().And.Contain(error => error.GetString()!.Equals(expectedMessage));
+            /* SHOULDLY */
+            erros.ShouldSatisfyAllConditions(
+                er => er.ShouldHaveSingleItem(),
+                er => er.ShouldContain(error => error.GetString()!.Equals(expectedMessage))
+                );
+
+            /* FLUENT ASSERTIONS */
+            //erros.Should().ContainSingle().And.Contain(error => error.GetString()!.Equals(expectedMessage));
         }
     }
 }
