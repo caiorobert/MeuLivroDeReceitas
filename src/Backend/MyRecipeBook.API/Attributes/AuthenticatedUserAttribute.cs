@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using MyRecipeBook.API.Filters;
 
 namespace MyRecipeBook.API.Attributes
