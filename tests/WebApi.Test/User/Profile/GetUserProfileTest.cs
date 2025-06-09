@@ -1,19 +1,14 @@
-﻿using CommonTestUtilities.Requests;
-using CommonTestUtilities.Tokens;
-using MyRecipeBook.Exceptions;
-
+﻿using CommonTestUtilities.Tokens;
 //using FluentAssertions;
 using Shouldly;
-using System.Globalization;
 using System.Net;
 using System.Text.Json;
-using WebApi.Test.InlineData;
 
 namespace WebApi.Test.User.Profile
 {
     public class GetUserProfileTest : MyRecipeBookClassFixture
     {
-        private readonly string METHOD = "user";
+        private const string METHOD = "user";
 
         private readonly string _name;
         private readonly string _email;

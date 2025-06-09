@@ -12,7 +12,8 @@ namespace WebApi.Test.Login.DoLogin
 {
     public class DoLoginTest : MyRecipeBookClassFixture
     {
-        private readonly string method = "login";
+        private const string METHOD = "login";
+
         private readonly string _email;
         private readonly string _password;
         private readonly string _name;
@@ -33,7 +34,7 @@ namespace WebApi.Test.Login.DoLogin
                 Password = _password
             };
 
-            var response = await DoPost(method, request);
+            var response = await DoPost(METHOD, request);
 
             /* SHOULDLY */
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -63,7 +64,7 @@ namespace WebApi.Test.Login.DoLogin
         {
             var request = RequestLoginJsonBuilder.Build();
 
-            var response = await DoPost(method, request, culture);
+            var response = await DoPost(METHOD, request, culture);
 
             /* SHOULDLY */
             response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);

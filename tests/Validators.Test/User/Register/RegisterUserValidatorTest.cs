@@ -94,7 +94,6 @@ namespace Validators.Test.User.Register
         }
 
         [Theory]
-        [InlineData(0)]
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
@@ -112,13 +111,30 @@ namespace Validators.Test.User.Register
             result.IsValid.ShouldBeFalse();
             result.Errors.ShouldSatisfyAllConditions(
                 er => er.ShouldHaveSingleItem(),
-                er => er.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.PASSWORD_EMPTY))
+                er => er.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.INVALID_PASSWORD))
                 );
 
             /* FLUENT ASSERTIONS */
             //result.IsValid.Should().BeFalse();
             //result.Errors.Should().ContainSingle()
             //    .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.PASSWORD_EMPTY));
+        }
+
+        public void Error_Password_Empty()
+        {
+            var validator = new RegisterUserValidator();
+
+            var request = RequestRegisterUserJsonBuilder.Build();
+            request.Password = string.Empty;
+
+            var result = validator.Validate(request);
+
+            result.IsValid.ShouldBeFalse();
+            result.Errors.ShouldSatisfyAllConditions(
+                er => er.ShouldHaveSingleItem(),
+                er => er.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.PASSWORD_EMPTY))
+                );
+
         }
     }
 }

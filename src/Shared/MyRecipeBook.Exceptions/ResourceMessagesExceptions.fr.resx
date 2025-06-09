@@ -138,6 +138,9 @@
   <data name="NO_TOKEN" xml:space="preserve">
     <value>Jeton non trouvé.</value>
   </data>
+  <data name="PASSWORD_DIFFERENT_CURRENT_PASSWORD" xml:space="preserve">
+    <value>Le mot de passe informé est différent du mot de passe actuel.</value>
+  </data>
   <data name="PASSWORD_EMPTY" xml:space="preserve">
     <value>L'mot de passe ne doit pas être vide.</value>
   </data>

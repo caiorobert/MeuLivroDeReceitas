@@ -1,7 +1,7 @@
 ﻿using CommonTestUtilities.Requests;
+using MyRecipeBook.Exceptions;
 //using FluentAssertions;
 using Shouldly;
-using MyRecipeBook.Exceptions;
 using System.Globalization;
 using System.Net;
 using System.Text.Json;
@@ -11,7 +11,7 @@ namespace WebApi.Test.User.Register
 {
     public class RegisterUseTest : MyRecipeBookClassFixture
     {
-        private readonly string METHOD = "user";
+        private const string METHOD = "user";
 
         public RegisterUseTest(CustomWebApplicationFactory factory) : base(factory) { }
 

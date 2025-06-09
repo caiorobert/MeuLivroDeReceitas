@@ -1,5 +1,4 @@
-﻿using MyRecipeBook.Application.UseCases.User.ChangePassword;
-using MyRecipeBook.Communication.Requests;
+﻿using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.User;
@@ -8,7 +7,7 @@ using MyRecipeBook.Domain.Services.LoggedUser;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
-namespace MyRecipeBook.Application.UseCases.User.Update
+namespace MyRecipeBook.Application.UseCases.User.ChangePassword
 {
     public class ChangePasswordUseCase : IChangePasswordUseCase
     {
@@ -40,7 +39,7 @@ namespace MyRecipeBook.Application.UseCases.User.Update
 
             var user = await _repository.GetById(loggedUser.Id);
 
-            user.Password = _passwordEncripter.Encrypt(request.NewPassord);
+            user.Password = _passwordEncripter.Encrypt(request.NewPassword);
 
             _repository.Update(user);
 
@@ -51,10 +50,10 @@ namespace MyRecipeBook.Application.UseCases.User.Update
         {
             var result = new ChangePasswordValidator().Validate(request);
 
-            var currentPasswordEncripted = _passwordEncripter.Encrypt(request.Passord);
+            var currentPasswordEncripted = _passwordEncripter.Encrypt(request.Password);
 
             if (currentPasswordEncripted.Equals(loggedUser.Password).IsFalse())
-                result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, ResourceMessagesExceptions.PASSWORD_EMPTY));
+                result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, ResourceMessagesExceptions.PASSWORD_DIFFERENT_CURRENT_PASSWORD));
 
             if (result.IsValid.IsFalse())
                 throw new ErrorOnValidationException(result.Errors.Select(e => e.ErrorMessage).ToList());
