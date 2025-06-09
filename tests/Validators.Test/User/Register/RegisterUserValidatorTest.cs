@@ -120,6 +120,7 @@ namespace Validators.Test.User.Register
             //    .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.PASSWORD_EMPTY));
         }
 
+        [Fact]
         public void Error_Password_Empty()
         {
             var validator = new RegisterUserValidator();
@@ -134,7 +135,6 @@ namespace Validators.Test.User.Register
                 er => er.ShouldHaveSingleItem(),
                 er => er.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.PASSWORD_EMPTY))
                 );
-
         }
     }
 }

@@ -61,6 +61,19 @@ namespace UseCases.Test.Login.DoLogin
             //    .WithMessage(ResourceMessagesExceptions.EMAIL_OR_PASSWORD_INVALID);
         }
 
+        [Fact]
+        public async Task Error_Invalid_Request_Login()
+        {
+            var request = RequestLoginJsonBuilder.Build();
+            request.Password = string.Empty;
+
+            var useCase = CreateUseCase();
+
+            Func<Task> act = async () => { await useCase.Execute(request); };
+
+            var exception = await act.ShouldThrowAsync<UnauthorizedAccessException>();
+        }
+
         private static DoLoginUseCase CreateUseCase(MyRecipeBook.Domain.Entities.User? user = null)
         {
             var passwordEncripter = PasswordEcripterBuilder.Build();
