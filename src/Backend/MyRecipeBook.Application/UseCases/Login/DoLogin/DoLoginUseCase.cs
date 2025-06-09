@@ -1,8 +1,8 @@
-﻿using MyRecipeBook.Application.Services.Cryptography;
-using MyRecipeBook.Communication.Requests;
+﻿using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories.User;
+using MyRecipeBook.Domain.Security.Cryptography;
 using MyRecipeBook.Domain.Security.Tokens;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
@@ -11,13 +11,13 @@ namespace MyRecipeBook.Application.UseCases.Login.DoLogin
     public class DoLoginUseCase : IDoLoginUseCase
     {
         private readonly IUserReadOnlyRepository _repository;
-        private readonly PasswordEcripter _passwordEcripter;
+        private readonly IPasswordEncripter _passwordEcripter;
         private readonly IAccessTokenGenerator _accessTokenGenerator;
 
         public DoLoginUseCase
         (
             IUserReadOnlyRepository repository,
-            PasswordEcripter passwordEcripter,
+            IPasswordEncripter passwordEcripter,
             IAccessTokenGenerator accessTokenGenerator
         )
         {
