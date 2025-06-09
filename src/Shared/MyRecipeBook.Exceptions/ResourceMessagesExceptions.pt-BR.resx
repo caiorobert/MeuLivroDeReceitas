@@ -129,6 +129,9 @@
   <data name="EMAIL_OR_PASSWORD_INVALID" xml:space="preserve">
     <value>E-mail e/ou senha inválido(s).</value>
   </data>
+  <data name="INVALID_PASSWORD" xml:space="preserve">
+    <value>A senha deve ter mais de 6 caracteres.</value>
+  </data>
   <data name="NAME_EMPTY" xml:space="preserve">
     <value>O nome não pode estar vazio.</value>
   </data>
@@ -136,7 +139,7 @@
     <value>Token não encontrado.</value>
   </data>
   <data name="PASSWORD_EMPTY" xml:space="preserve">
-    <value>A senha deve ter mais de 6 caracteres.</value>
+    <value>A senha não pode estar vazia.</value>
   </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Erro desconhecido.</value>
