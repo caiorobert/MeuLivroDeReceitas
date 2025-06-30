@@ -2,7 +2,7 @@
 
 namespace MyRecipeBook.Domain.Entities
 {
-    internal class Recipe : EntityBase
+    public class Recipe : EntityBase
     {
         public string Title { get; set; } = string.Empty;
         public CookingTime? CookingTime { get; set; }
