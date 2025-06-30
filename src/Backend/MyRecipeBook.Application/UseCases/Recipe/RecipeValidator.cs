@@ -19,8 +19,11 @@ namespace MyRecipeBook.Application.UseCases.Recipe
             {
                 instructionRule.RuleFor(instruction => instruction.Step).GreaterThan(0).WithMessage(ResourceMessagesExceptions.NON_NEGATIVE_INSTRUCTION_STEP);
                 instructionRule
-                    .RuleFor(instruction => instruction.Text).NotEmpty().WithMessage(ResourceMessagesExceptions.INSTRUCTION_EMPTY)
-                    .MaximumLength(2000).WithMessage(ResourceMessagesExceptions.INSTRUCTION_EXCEEDS_LIMIT_CHARACTERS);
+                .RuleFor(instruction => instruction.Text)
+                .NotEmpty()
+                .WithMessage(ResourceMessagesExceptions.INSTRUCTION_EMPTY)
+                .MaximumLength(2000)
+                .WithMessage(ResourceMessagesExceptions.INSTRUCTION_EXCEEDS_LIMIT_CHARACTERS);
             });
             RuleFor(recipe => recipe.Instructions)
                 .Must(instructions => instructions.Select(i => i.Step).Distinct().Count() == instructions.Count)
