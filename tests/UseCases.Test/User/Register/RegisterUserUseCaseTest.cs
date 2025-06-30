@@ -51,13 +51,13 @@ namespace UseCases.Test.User.Register
             /* SHOULDLY */
             var exception = await act.ShouldThrowAsync<ErrorOnValidationException>();
             exception.ShouldSatisfyAllConditions(
-                ex => ex.ErrorMessages.ShouldHaveSingleItem(),
-                ex => ex.ErrorMessages.ShouldContain(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED)
+                ex => ex.GetErrorMessages().ShouldHaveSingleItem(),
+                ex => ex.GetErrorMessages().ShouldContain(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED)
             );
 
             /* FLUENT ASSERTIONS */
             //(await act.Should().ThrowAsync<ErrorOnValidationException>())
-            //    .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED));
+            //    .Where(e => e.GetErrorMessages().Count == 1 && e.GetErrorMessages().Contains(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED));
         }
 
         [Fact]
@@ -73,13 +73,13 @@ namespace UseCases.Test.User.Register
             /* SHOULDLY */
             var exception = await act.ShouldThrowAsync<ErrorOnValidationException>();
             exception.ShouldSatisfyAllConditions(
-                ex => ex.ErrorMessages.ShouldHaveSingleItem(),
-                ex => ex.ErrorMessages.ShouldContain(ResourceMessagesExceptions.NAME_EMPTY)
+                ex => ex.GetErrorMessages().ShouldHaveSingleItem(),
+                ex => ex.GetErrorMessages().ShouldContain(ResourceMessagesExceptions.NAME_EMPTY)
             );
 
             /* FLUENT ASSERTIONS */
             //(await act.Should().ThrowAsync<ErrorOnValidationException>())
-            //    .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesExceptions.NAME_EMPTY));
+            //    .Where(e => e.GetErrorMessages().Count == 1 && e.GetErrorMessages().Contains(ResourceMessagesExceptions.NAME_EMPTY));
         }
 
         private static RegisterUserUseCase CreateUseCase(string? email = null)

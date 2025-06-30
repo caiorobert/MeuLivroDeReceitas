@@ -43,8 +43,8 @@ namespace UseCases.Test.User.Update
 
             (await act.ShouldThrowAsync<ErrorOnValidationException>())
                 .ShouldSatisfyAllConditions(
-                ex => ex.ErrorMessages.ShouldHaveSingleItem(),
-                ex => ex.ErrorMessages.ShouldContain(ResourceMessagesExceptions.NAME_EMPTY)
+                ex => ex.GetErrorMessages().ShouldHaveSingleItem(),
+                ex => ex.GetErrorMessages().ShouldContain(ResourceMessagesExceptions.NAME_EMPTY)
             );
 
             user.Name.ShouldNotBe(request.Name);
@@ -64,8 +64,8 @@ namespace UseCases.Test.User.Update
 
             var exception = await act.ShouldThrowAsync<ErrorOnValidationException>();
             exception.ShouldSatisfyAllConditions(
-                ex => ex.ErrorMessages.ShouldHaveSingleItem(),
-                ex => ex.ErrorMessages.ShouldContain(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED)
+                ex => ex.GetErrorMessages().ShouldHaveSingleItem(),
+                ex => ex.GetErrorMessages().ShouldContain(ResourceMessagesExceptions.EMAIL_ALREADY_REGISTERED)
             );
 
             user.Name.ShouldNotBe(request.Name);

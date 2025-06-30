@@ -50,8 +50,8 @@ namespace UseCases.Test.User.ChangePassword
             var exception = await act.ShouldThrowAsync<ErrorOnValidationException>();
 
             exception.ShouldSatisfyAllConditions(
-                ex => ex.ErrorMessages.ShouldHaveSingleItem(),
-                ex => ex.ErrorMessages.ShouldContain(ResourceMessagesExceptions.PASSWORD_EMPTY)
+                ex => ex.GetErrorMessages().ShouldHaveSingleItem(),
+                ex => ex.GetErrorMessages().ShouldContain(ResourceMessagesExceptions.PASSWORD_EMPTY)
             );
 
             var passwordEcripter = PasswordEcripterBuilder.Build();
@@ -73,8 +73,8 @@ namespace UseCases.Test.User.ChangePassword
             var exception = await act.ShouldThrowAsync<ErrorOnValidationException>();
 
             exception.ShouldSatisfyAllConditions(
-                ex => ex.ErrorMessages.ShouldHaveSingleItem(),
-                ex => ex.ErrorMessages.ShouldContain(ResourceMessagesExceptions.PASSWORD_DIFFERENT_CURRENT_PASSWORD)
+                ex => ex.GetErrorMessages().ShouldHaveSingleItem(),
+                ex => ex.GetErrorMessages().ShouldContain(ResourceMessagesExceptions.PASSWORD_DIFFERENT_CURRENT_PASSWORD)
             );
 
             var passwordEcripter = PasswordEcripterBuilder.Build();
