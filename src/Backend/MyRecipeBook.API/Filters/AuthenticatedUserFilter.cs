@@ -8,60 +8,59 @@ using MyRecipeBook.Domain.Security.Tokens;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
-namespace MyRecipeBook.API.Filters
+namespace MyRecipeBook.API.Filters;
+
+public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
 {
-    public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
+    private readonly IAccessTokenValidator _accessTokenValidator;
+    private readonly IUserReadOnlyRepository _repository;
+
+    public AuthenticatedUserFilter(IAccessTokenValidator accessTokenValidator, IUserReadOnlyRepository repository)
     {
-        private readonly IAccessTokenValidator _accessTokenValidator;
-        private readonly IUserReadOnlyRepository _repository;
+        _accessTokenValidator = accessTokenValidator;
+        _repository = repository;
+    }
 
-        public AuthenticatedUserFilter(IAccessTokenValidator accessTokenValidator, IUserReadOnlyRepository repository)
+    public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+    {
+        try
         {
-            _accessTokenValidator = accessTokenValidator;
-            _repository = repository;
-        }
+            var token = TokenOnRequest(context);
 
-        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
-        {
-            try
-            {
-                var token = TokenOnRequest(context);
+            var userIdentifier = _accessTokenValidator.ValidateAndGetUserIdentifier(token);
 
-                var userIdentifier = _accessTokenValidator.ValidateAndGetUserIdentifier(token);
-
-                var exist = await _repository.ExistActiveUserWithIdentifier(userIdentifier);
-
-                if (exist.IsFalse())
-                {
-                    throw new MyRecipeBookException(ResourceMessagesExceptions.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE);
-                }
-            }
-            catch (SecurityTokenExpiredException)
+            var exist = await _repository.ExistActiveUserWithIdentifier(userIdentifier);
+            if (exist.IsFalse())
             {
-                context.Result = new UnauthorizedObjectResult(new ResponseErrorJson("TokenIsExpired")
-                {
-                    TokenIsExpired = true,
-                });
-            }
-            catch (MyRecipeBookException ex)
-            {
-                context.Result = new UnauthorizedObjectResult(new ResponseErrorJson(ex.Message));
-            }
-            catch
-            {
-                context.Result = new UnauthorizedObjectResult(new ResponseErrorJson(ResourceMessagesExceptions.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE));
+                throw new UnauthorizedException(ResourceMessagesExceptions.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE);
             }
         }
-
-        private static string TokenOnRequest(AuthorizationFilterContext context)
+        catch (SecurityTokenExpiredException)
         {
-            var authentication = context.HttpContext.Request.Headers.Authorization.ToString();
-            if (string.IsNullOrWhiteSpace(authentication))
+            context.Result = new UnauthorizedObjectResult(new ResponseErrorJson("TokenIsExpired")
             {
-                throw new MyRecipeBookException(ResourceMessagesExceptions.NO_TOKEN);
-            }
-
-            return authentication["Bearer ".Length..].Trim();
+                TokenIsExpired = true,
+            });
         }
+        catch (MyRecipeBookException myRecipeBookException)
+        {
+            context.HttpContext.Response.StatusCode = (int)myRecipeBookException.GetStatusCode();
+            context.Result = new ObjectResult(new ResponseErrorJson(myRecipeBookException.GetErrorMessages()));
+        }
+        catch
+        {
+            context.Result = new UnauthorizedObjectResult(new ResponseErrorJson(ResourceMessagesExceptions.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE));
+        }
+    }
+
+    private static string TokenOnRequest(AuthorizationFilterContext context)
+    {
+        var authentication = context.HttpContext.Request.Headers.Authorization.ToString();
+        if (string.IsNullOrWhiteSpace(authentication))
+        {
+            throw new UnauthorizedException(ResourceMessagesExceptions.NO_TOKEN);
+        }
+
+        return authentication["Bearer ".Length..].Trim();
     }
 }
