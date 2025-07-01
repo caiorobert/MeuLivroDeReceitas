@@ -20,7 +20,7 @@ namespace WebApi.Test.User.Register
         {
             var request = RequestRegisterUserJsonBuilder.Build();
 
-            var response = await DoPost(METHOD, request);
+            var response = await DoPost(method: METHOD, request: request);
 
             /* SHOULDLY */
             response.StatusCode.ShouldBe(HttpStatusCode.Created);
@@ -51,7 +51,7 @@ namespace WebApi.Test.User.Register
             var request = RequestRegisterUserJsonBuilder.Build();
             request.Name = string.Empty;
 
-            var response = await DoPost(METHOD, request, culture);
+            var response = await DoPost(method: METHOD, request: request, culture: culture);
 
             /* SHOULDLY */
             response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);

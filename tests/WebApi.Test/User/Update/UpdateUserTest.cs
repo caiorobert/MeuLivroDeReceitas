@@ -17,7 +17,7 @@ namespace WebApi.Test.User.Update
 
         public UpdateUserTest(CustomWebApplicationFactory factory) : base(factory)
         {
-            _userIdentifier = factory.getUserIdentifier();
+            _userIdentifier = factory.GetUserIdentifier();
         }
 
         [Fact]

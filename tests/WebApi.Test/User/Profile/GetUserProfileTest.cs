@@ -18,7 +18,7 @@ namespace WebApi.Test.User.Profile
         {
             _name = factory.GetName();
             _email = factory.GetEmail();
-            _userIdentifier = factory.getUserIdentifier();
+            _userIdentifier = factory.GetUserIdentifier();
         }
 
         [Fact]

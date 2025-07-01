@@ -22,7 +22,7 @@ namespace WebApi.Test.User.ChangePassword
         {
             _password = factory.GetPassword();
             _email = factory.GetEmail();
-            _userIdentifier = factory.getUserIdentifier();
+            _userIdentifier = factory.GetUserIdentifier();
         }
 
         [Fact]
@@ -43,12 +43,12 @@ namespace WebApi.Test.User.ChangePassword
                 Password = _password
             };
 
-            response = await DoPost("login", loginRequest);
+            response = await DoPost(method: "login", request: loginRequest);
             response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
 
             loginRequest.Password = request.NewPassword;
 
-            response = await DoPost("login", loginRequest);
+            response = await DoPost(method: "login", request: loginRequest);
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 

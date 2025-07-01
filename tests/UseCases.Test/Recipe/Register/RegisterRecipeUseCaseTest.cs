@@ -1,0 +1,94 @@
+﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.LoggedUser;
+using CommonTestUtilities.Mapper;
+using CommonTestUtilities.Repositories;
+using CommonTestUtilities.Requests;
+using MyRecipeBook.Application.UseCases.Recipe.Register;
+using MyRecipeBook.Exceptions;
+using MyRecipeBook.Exceptions.ExceptionsBase;
+using Shouldly;
+
+namespace UseCases.Test.Recipe.Register;
+public class RegisterRecipeUseCaseTest
+{
+    [Fact]
+    public async Task Success_Without_Image()
+    {
+        (var user, _) = UserBuilder.Build();
+
+        var request = RequestRegisterRecipeFormDataBuilder.Build();
+
+        var useCase = CreateUseCase(user);
+
+        var result = await useCase.Execute(request);
+
+        result.ShouldNotBeNull();
+        result.Id.ShouldNotBeNullOrWhiteSpace();
+        result.Title.ShouldBe(request.Title);
+    }
+
+    //[Theory]
+    //[ClassData(typeof(ImageTypesInlineData))]
+    //public async Task Success_With_Image(IFormFile file)
+    //{
+    //    (var user, _) = UserBuilder.Build();
+
+    //    var request = RequestRegisterRecipeFormDataBuilder.Build(file);
+
+    //    var useCase = CreateUseCase(user);
+
+    //    var result = await useCase.Execute(request);
+
+    //    result.Should().NotBeNull();
+    //    result.Id.Should().NotBeNullOrWhiteSpace();
+    //    result.Title.Should().Be(request.Title);
+    //}
+
+    [Fact]
+    public async Task Error_Title_Empty()
+    {
+        (var user, _) = UserBuilder.Build();
+
+        var request = RequestRegisterRecipeFormDataBuilder.Build();
+        request.Title = string.Empty;
+
+        var useCase = CreateUseCase(user);
+
+        var exception = await Should.ThrowAsync<ErrorOnValidationException>(() => useCase.Execute(request));
+
+        exception.ShouldNotBeNull();
+        var messages = exception.GetErrorMessages();
+        messages.Count.ShouldBe(1);
+        messages.ShouldContain(ResourceMessagesExceptions.RECIPE_TITLE_EMPTY);
+    }
+
+
+    //[Fact]
+    //public async Task Error_Invalid_File()
+    //{
+    //    (var user, _) = UserBuilder.Build();
+
+    //    var textFile = FormFileBuilder.Txt();
+
+    //    var request = RequestRegisterRecipeFormDataBuilder.Build(textFile);
+
+    //    var useCase = CreateUseCase(user);
+
+    //    var act = async () => { await useCase.Execute(request); };
+
+    //    (await act.Should().ThrowAsync<ErrorOnValidationException>())
+    //        .Where(e => e.GetErrorMessages().Count == 1 &&
+    //            e.GetErrorMessages().Contains(ResourceMessagesExceptions.ONLY_IMAGES_ACCEPTED));
+    //}
+
+    private static RegisterRecipeUseCase CreateUseCase(MyRecipeBook.Domain.Entities.User user)
+    {
+        var mapper = MapperBuilder.Build();
+        var unitOfWork = UnitOfWorkBuilder.Build();
+        var loggedUser = LoggedUserBuilder.Build(user);
+        var repository = RecipeWriteOnlyRepositoryBuilder.Build();
+        //var blobStorage = new BlobStorageServiceBuilder().Build();
+
+        return new RegisterRecipeUseCase(repository, loggedUser, unitOfWork, mapper);
+    }
+}

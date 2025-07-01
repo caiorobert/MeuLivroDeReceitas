@@ -34,7 +34,7 @@ namespace WebApi.Test.Login.DoLogin
                 Password = _password
             };
 
-            var response = await DoPost(METHOD, request);
+            var response = await DoPost(method: METHOD, request: request);
 
             /* SHOULDLY */
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -64,7 +64,7 @@ namespace WebApi.Test.Login.DoLogin
         {
             var request = RequestLoginJsonBuilder.Build();
 
-            var response = await DoPost(METHOD, request, culture);
+            var response = await DoPost(method: METHOD, request: request, culture: culture);
 
             /* SHOULDLY */
             response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
