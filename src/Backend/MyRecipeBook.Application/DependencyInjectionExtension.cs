@@ -15,22 +15,11 @@ namespace MyRecipeBook.Application
     {
         public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            AddAutoMapper(services);
-            AddIdEncoder(services, configuration);
+            AddAutoMapper(services, configuration);
             AddUseCases(services);
         }
 
-        private static void AddAutoMapper(IServiceCollection services)
-        {
-            services.AddScoped(option => new AutoMapper.MapperConfiguration(autoMapperOptions =>
-            {
-                var sqids = option.GetService<SqidsEncoder<long>>()!;
-
-                autoMapperOptions.AddProfile(new AutoMapping(sqids));
-            }).CreateMapper());
-        }
-
-        private static void AddIdEncoder(IServiceCollection services, IConfiguration configuration)
+        private static void AddAutoMapper(IServiceCollection services, IConfiguration configuration)
         {
             var sqids = new SqidsEncoder<long>(new()
             {
@@ -38,7 +27,10 @@ namespace MyRecipeBook.Application
                 Alphabet = configuration.GetValue<string>("Settings:IdCryptographyAlphabet")!
             });
 
-            services.AddSingleton(sqids);
+            services.AddScoped(option => new AutoMapper.MapperConfiguration(options =>
+            {
+                options.AddProfile(new AutoMapping(sqids));
+            }).CreateMapper());
         }
 
         private static void AddUseCases(IServiceCollection services)
