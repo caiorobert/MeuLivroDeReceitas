@@ -9,7 +9,6 @@ public class GetDashboardUseCase : IGetDashboardUseCase
     private readonly IRecipeReadOnlyRepository _repository;
     private readonly IMapper _mapper;
     private readonly ILoggedUser _loggedUser;
-    //private readonly IBlobStorageService _blobStorageService;
 
     public GetDashboardUseCase(
         IRecipeReadOnlyRepository repository,

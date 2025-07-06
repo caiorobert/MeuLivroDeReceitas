@@ -12,7 +12,6 @@ public class FilterRecipeUseCase : IFilterRecipeUseCase
     private readonly IMapper _mapper;
     private readonly ILoggedUser _loggedUser;
     private readonly IRecipeReadOnlyRepository _repository;
-    //private readonly IBlobStorageService _blobStorageService;
 
     public FilterRecipeUseCase(
         IMapper mapper,
@@ -22,7 +21,6 @@ public class FilterRecipeUseCase : IFilterRecipeUseCase
         _mapper = mapper;
         _loggedUser = loggedUser;
         _repository = repository;
-        //_blobStorageService = blobStorageService;
     }
 
     public async Task<ResponseRecipesJson> Execute(RequestFilterRecipeJson request)

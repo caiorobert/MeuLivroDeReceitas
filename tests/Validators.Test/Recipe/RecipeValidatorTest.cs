@@ -56,7 +56,7 @@ namespace Validators.Test.Recipe
 
         [Theory]
         [InlineData(null)]
-        [InlineData("       ")]
+        [InlineData("          ")]
         [InlineData("")]
         public void Error_Empty_Title(string title)
         {
@@ -112,7 +112,7 @@ namespace Validators.Test.Recipe
 
             result.IsValid.ShouldBeTrue();
         }
-        
+
         [Fact]
         public void Error_Invalid_DishTypes()
         {
@@ -129,7 +129,7 @@ namespace Validators.Test.Recipe
                 r => r.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.DISH_TYPE_NOT_SUPPORTED))
                 );
         }
-        
+
         [Fact]
         public void Error_Empty_Ingredients()
         {
@@ -146,7 +146,7 @@ namespace Validators.Test.Recipe
                 r => r.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.AT_LEAST_ONE_INGREDIENT))
                 );
         }
-        
+
         [Fact]
         public void Error_Empty_Instructions()
         {
@@ -163,7 +163,7 @@ namespace Validators.Test.Recipe
                 r => r.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.AT_LEAST_ONE_INSTRUCTION))
                 );
         }
-        
+
         [Theory]
         [InlineData("    ")]
         [InlineData("")]
@@ -183,7 +183,7 @@ namespace Validators.Test.Recipe
                 r => r.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.INGREDIENT_EMPTY))
                 );
         }
-        
+
         [Fact]
         public void Error_Same_Step_Instructions()
         {
@@ -200,7 +200,7 @@ namespace Validators.Test.Recipe
                 r => r.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.TWO_OR_MORE_INSTRUCTIONS_SAME_ORDER))
                 );
         }
-        
+
         [Fact]
         public void Error_Negative_Step_Instructions()
         {
@@ -217,7 +217,7 @@ namespace Validators.Test.Recipe
                 r => r.ShouldContain(e => e.ErrorMessage.Equals(ResourceMessagesExceptions.NON_NEGATIVE_INSTRUCTION_STEP))
                 );
         }
-        
+
         [Theory]
         [InlineData("   ")]
         [InlineData("")]

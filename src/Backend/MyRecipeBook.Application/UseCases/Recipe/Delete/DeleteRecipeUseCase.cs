@@ -11,7 +11,6 @@ public class DeleteRecipeUseCase : IDeleteRecipeUseCase
     private readonly IRecipeReadOnlyRepository _repositoryRead;
     private readonly IRecipeWriteOnlyRepository _repositoryWrite;
     private readonly IUnitOfWork _unitOfWork;
-    //private readonly IBlobStorageService _blobStorageService;
 
     public DeleteRecipeUseCase(
         ILoggedUser loggedUser,
@@ -33,9 +32,6 @@ public class DeleteRecipeUseCase : IDeleteRecipeUseCase
 
         if (recipe is null)
             throw new NotFoundException(ResourceMessagesExceptions.RECIPE_NOT_FOUND);
-
-        //if (recipe.ImageIdentifier.NotEmpty())
-        //    await _blobStorageService.Delete(loggedUser, recipe.ImageIdentifier);
 
         await _repositoryWrite.Delete(recipeId);
 

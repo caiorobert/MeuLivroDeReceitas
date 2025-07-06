@@ -9,5 +9,7 @@
         public const int REFRESH_TOKEN_EXPIRATION_DAYS = 7;
         public const string CHAT_MODEL = "gpt-4o";
         public const int QUANTITY_RECIPES_RETURNED_TO_DASHBOARD = 5;
+        public const string RECIPE_TABLE_NAME = "Recipes";
+        public const string USER_TABLE_NAME = "Users";
     }
 }
