@@ -4,6 +4,7 @@ using MyRecipeBook.Domain.Dtos;
 using MyRecipeBook.Domain.Entities;
 using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories.Recipe;
+using MyRecipeBook.Helpers.Constants;
 
 namespace MyRecipeBook.Infrastructure.DataAccess.Repositories
 {
@@ -72,7 +73,7 @@ namespace MyRecipeBook.Infrastructure.DataAccess.Repositories
                 .Include(recipe => recipe.Ingredients)
                 .Where(recipe => recipe.Active && recipe.UserId == user.Id)
                 .OrderByDescending(r => r.CreatedOn)
-                .Take(5)
+                .Take(MyRecipeBookRuleConstants.QUANTITY_RECIPES_RETURNED_TO_DASHBOARD)
                 .ToListAsync();
         }
 
